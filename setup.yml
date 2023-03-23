@@ -1,0 +1,73 @@
+---
+
+- hosts: proxmox
+  gather_facts: true
+  become: yes
+  remote_user: "{{ proxmox_lxc_ssh_user }}"
+  roles:
+    - role: proxmox_lxc
+      when: proxmox_lxc_configure
+
+- hosts: k3s_cluster
+  gather_facts: yes
+  roles:
+    - role: lxc
+      become: true
+      when: proxmox_lxc_configure
+    - role: prereq
+      become: true
+    - role: download
+      become: true
+    - role: raspberrypi
+      become: true
+
+- hosts: master
+  roles:
+    - role: k3s/master
+      become: true
+
+- hosts: node
+  roles:
+    - role: k3s/node
+      become: true
+
+- hosts: master
+  roles:
+    - role: k3s/post
+      become: true
+
+- hosts: master[0]
+  name: Installing helm
+  become: true
+  roles:
+    - role: helm
+
+- hosts: k3s_cluster
+  gather_facts: true
+  become: true
+  roles:
+    - role: reboot
+
+- hosts: master[0]
+  name: Installing cert-manager
+  become: true
+  roles:
+    - role: cert-manager
+
+- hosts: master[0]
+  become: true
+  roles:
+    - role: traefik
+
+- hosts: master[0]
+  name: Installing rancher
+  become: true
+  roles:
+    - role: rancher
+
+- hosts: master[0]
+  name: Installing longhorn
+  become: true
+  roles:
+    - role: longhorn
+# todo: make namespace creation not stoppe the install if allready exist (on second run of install)
