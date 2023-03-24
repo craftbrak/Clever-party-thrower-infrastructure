@@ -1,21 +1,25 @@
 ---
-k3s_version: v1.24.11+k3s1
+k3s_version: v1.23.9+k3s1
 # this is the user that has ssh access to these machines
 ansible_user: ansibleuser
 systemd_dir: /etc/systemd/system
 
+# Set your environment
+deployment_environment: staging
+#deployment_environment: production #Todo: commit on staging
+
 # Set your timezone
-system_timezone: "Your/Timezone"
+system_timezone: "Your/TimeZone"
 
 # interface which will be used for flannel
 flannel_iface: "eth0"
 
 # apiserver_endpoint is virtual ip-address which will be configured on each master
-apiserver_endpoint: "192.168.30.222"
+apiserver_endpoint: "192.168.x.x"
 
 # k3s_token is required  masters can talk together securely
 # this token should be alpha numeric only
-k3s_token: "some-SUPER-DEDEUPER-secret-password"
+k3s_token: "YourK3SToken"
 
 # The IP on which the node is reachable in the cluster.
 # Here, a sensible default is provided, you can still override
@@ -60,8 +64,31 @@ metal_lb_speaker_tag_version: "v0.13.9"
 metal_lb_controller_tag_version: "v0.13.9"
 
 # metallb ip range for load balancer
-metal_lb_ip_range: "192.168.30.80-192.168.30.90"
+metal_lb_ip_range: "192.168.x.x-192.168.x.x"
 
+# first ip from metallb range for internal traefik
+traefik_endpoint_ip: "192.168.x.x"
+traefik_dash_dns_name: "TraefikHostname"
+
+# traefik dashboard user
+traefik_dashboard_secret: "TraefikAuthPassword"
+
+# cloudflare api key
+cloudflare_email: "youremail@youremaildomain"
+cloudflare_token: "Your cloudflare token"
+
+# image tag for cert-manager
+cert_manager_version: "v1.9.1"
+
+# cert manager domains
+cert_manager_internal_domain: "yourInternalDomain"
+cert_manager_external_domain: "yourExternalDomain"
+
+# rancher dns name
+rancher_dns_name: "RancherDNSName"
+
+longhorn_dns_name: "LongHornDNSName"
+longhorn_dashboard_secret: "LongHornAuthPassword"
 # Only enable if your nodes are proxmox LXC nodes, make sure to configure your proxmox nodes
 # in your hosts.ini file.
 # Please read https://gist.github.com/triangletodd/02f595cd4c0dc9aac5f7763ca2264185 before using this.

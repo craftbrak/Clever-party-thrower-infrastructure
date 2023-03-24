@@ -22,13 +22,13 @@
 #    mode: 0644
 #
 #
-#- name: Copy longhorn ingressroute to first master
-#  template:
-#    src: "ingress.yml.j2"
-#    dest: /tmp/longhorn/ingress.yml
-#    owner: "{{ ansible_user }}"
-#    group: "{{ ansible_user }}"
-#    mode: 0644
+- name: Copy longhorn ingressroute to first master
+  template:
+    src: "ingress.yml.j2"
+    dest: /tmp/longhorn/ingress.yml
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
 
 - name: add longhorn helm repo
   become: yes
@@ -58,6 +58,11 @@
   become_user: "{{ ansible_user }}"
   command:
     cmd: helm install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace --version 1.4.1
+  changed_when: true
+
+- name: apply longhorn dashboard ingressroute
+  command:
+    cmd: kubectl apply -f /tmp/longhorn/ingress.yml
   changed_when: true
 
 - name: Clean up longhorn tmp dir
