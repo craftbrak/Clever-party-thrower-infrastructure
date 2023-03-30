@@ -1,0 +1,41 @@
+- name: Create argocd config directory on first master
+  file:
+    path: /tmp/argocd
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+
+- name: Copy argoCd ingressroute to first master
+  template:
+    src: "ingress.yml.j2"
+    dest: /tmp/argocd/ingress.yml
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+
+- name: wait for k3s API server VIP {{ apiserver_endpoint }} to be available
+  wait_for:
+    host: "{{ apiserver_endpoint }}"
+    port: 6443
+    delay: 10
+
+- name: create the argocd namespace for longhorn
+  command:
+    cmd: kubectl create namespace argocd
+  changed_when: true
+
+- name: deploy argocd using kubectl
+  command:
+    cmd: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+  changed_when: true
+
+- name: apply argocd dashboard ingressroute
+  command:
+    cmd: kubectl apply -f /tmp/argocd/ingress.yml
+  changed_when: true
+
+- name: Clean up argocd tmp dir
+  file:
+    path: /tmp/argocd/
+    state: absent
