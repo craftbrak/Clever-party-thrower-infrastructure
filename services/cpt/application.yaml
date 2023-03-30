@@ -1,0 +1,12 @@
+project: clever-party-thrower
+source:
+  repoURL: 'https://github.com/craftbrak/Clever-Party-Thrower'
+  path: kubeconfigs/front-end
+  targetRevision: HEAD
+destination:
+  namespace: cpt
+  name: in-cluster
+syncPolicy:
+  automated: {}
+  suncOptions:
+  - CreateNamescpace=true
