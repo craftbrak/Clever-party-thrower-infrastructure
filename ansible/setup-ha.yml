@@ -70,4 +70,10 @@
   become: true
   roles:
     - role: longhorn
+
+- hosts: master[0]
+  name: Installing ArgoCd
+  become: true
+  roles:
+    - role: argocd
 # todo: make namespace creation not stoppe the install if allready exist (on second run of install)
