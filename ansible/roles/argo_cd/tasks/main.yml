@@ -20,7 +20,7 @@
     port: 6443
     delay: 10
 
-- name: create the argocd namespace for longhorn
+- name: create the argocd namespace for argo-cd
   command:
     cmd: kubectl create namespace argocd
   changed_when: true
