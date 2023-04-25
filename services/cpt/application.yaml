@@ -9,6 +9,6 @@ spec:
     path: kubeconfigs/front-end
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: cpt-namespace
   syncPolicy:
     automated: {}
