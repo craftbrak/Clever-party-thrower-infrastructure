@@ -1,12 +1,14 @@
-project: clever-party-thrower
-source:
-  repoURL: 'https://github.com/craftbrak/Clever-Party-Thrower'
-  path: kubeconfigs/front-end
-  targetRevision: HEAD
-destination:
-  namespace: cpt
-  name: in-cluster
-syncPolicy:
-  automated: {}
-  suncOptions:
-  - CreateNamescpace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cpt-stack
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/craftbrak/Clever-Party-Thrower'
+    path: kubeconfigs/front-end
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated: {}
